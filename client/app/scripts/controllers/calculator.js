@@ -1,19 +1,17 @@
 'use strict';
 
 angular.module('pocketCalculatorApp')
-  .controller('CaculatorCtrl', function ($scope, $http) {
+  .controller('CaculatorCtrl', function ($scope, $http, CalculatorObject) {
 
-    $scope.value = '';
-    $scope.prevNumber = '';
-    $scope.operation = '';
-    $scope.prevBool = false;
-    $scope.point = false;
-    $scope.operBool = false;
+
+    var calculator = new CalculatorObject();
+    $scope.current = false;
+    $scope.value = calculator.value;
 
     $scope.sample = function(){
-      $http.get('/sample').then(function(data){
-        console.log(data);
-      });
+      // $http.post('/api/plus', {'hello': 'cool'}).then(function(data){
+      //   console.log(data);
+      // });
     };
 
     $scope.clearPress = function(){
@@ -21,35 +19,49 @@ angular.module('pocketCalculatorApp')
     };
 
     $scope.pressValue = function(value){
-      if($scope.operBool === true){
-        $scope.value = value;
+      if($scope.current === true){
+        calculator.value = value;
+        setDisplayValue(calculator.value);
+        $scope.current = false;
       } else {
-        addValue(value);
+        if(calculator.value.length < 18){
+          addValue(value);
+        }
       }
     };
 
     function addValue(number){
-      $scope.value = $scope.value + number;
+      calculator.value += number;
+      setDisplayValue(calculator.value);
     }
 
     $scope.pressDot = function(dot){
-      if(dot === '.' && $scope.point === false && $scope.value.length < 18){
-        $scope.point = true;
-        $scope.value = $scope.value + dot;
+      if(dot === '.' && calculator.point === false && calculator.value.length < 18){
+        calculator.point = true;
+        calculator.value += dot;
+        setDisplayValue(calculator.value);
       }
     };
 
     $scope.pressOperations = function(operation){
 
-      if($scope.prevBool === false && $scope.operBool === false){
-        $scope.prevBool = true;
-        $scope.operBool = true;
-        $scope.prevNumber = $scope.value;
-        $scope.operation = operation;
+      if(calculator.prevBool === false && calculator.operBool === false){
+        calculator.prevBool = true;
+        calculator.operBool = true;
+        calculator.prevNumber = calculator.value;
+        calculator.operation = operation;
+        $scope.current = true;
       } else {
-        var intValue = parseInt($scope.prevNumber) + parseInt($scope.value);
-        $scope.value = intValue.toString();
-        $scope.prevNumber = $scope.value;
+
+        // var intValue = parseInt(calculator.prevNumber) + parseInt(calculator.value);
+        // setDisplayValue(intValue.toString());
+
+        calculator.calculate(calculator.operation).then(function(data){
+          console.log(data)
+          setDisplayValue(data);
+        });
+
+        // calculator.prevNumber = intValue;
       }
     };
 
@@ -57,5 +69,8 @@ angular.module('pocketCalculatorApp')
       // do somthing
     };
 
+    function setDisplayValue(value){
+      $scope.value = value;
+    }
     // todo
 });
