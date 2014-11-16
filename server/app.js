@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var api = require('./api/calculator.js');
 
 var app = express();
 
@@ -55,6 +56,13 @@ if (app.get('env') === 'production') {
         });
     });
 }
+
+app.post('/api/plus', api.plus);
+// app.post('/api/minus', api.minus);
+// app.post('/api/divide', api.divide);
+// app.post('/api/multiply', api.multiply);
+// app.post('/api/equal', api.equal);
+
 
 
 module.exports = app;
