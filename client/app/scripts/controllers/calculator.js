@@ -58,7 +58,10 @@ angular.module('pocketCalculatorApp')
     };
 
     $scope.pressPercentage = function(){
-      calculator.currentNumber = calculator.currentNumber / 100;
+      $scope.point = true;
+      calculator.decimalPoint = true;
+      var percentageConversion = parseFloat(calculator.currentNumber) / 100;
+      calculator.currentNumber = percentageConversion.toString();
       setDisplayValue(calculator.currentNumber);
     }
 
