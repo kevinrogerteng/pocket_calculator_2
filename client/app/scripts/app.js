@@ -21,8 +21,7 @@ angular
         controller: 'CaculatorCtrl'
       })
       .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+        templateUrl: 'views/about.html'
       })
       .otherwise({
         redirectTo: '/'
