@@ -3,7 +3,6 @@
 angular.module('pocketCalculatorApp')
   .controller('CaculatorCtrl', function ($scope, $http, CalculatorObject) {
 
-
     var calculator = new CalculatorObject();
     $scope.current = false;
     $scope.equal = false;
@@ -12,13 +11,17 @@ angular.module('pocketCalculatorApp')
 
     $scope.toggleSign = function(){
 
-      if($scope.sign){
-        calculator.currentNumber = '-' + calculator.currentNumber;
-        setDisplayValue(calculator.currentNumber);
-      } else {
-        calculator.currentNumber = calculator.currentNumber.slice(1, calculator.currentNumber.length);
-        setDisplayValue(calculator.currentNumber);
+      if(calculator.currentNumber.length > 0){
+        $scope.sign = !$scope.sign;
+        if(!$scope.sign){
+          calculator.currentNumber = '-' + calculator.currentNumber;
+          setDisplayValue(calculator.currentNumber);
+        } else {
+          calculator.currentNumber = calculator.currentNumber.slice(1, calculator.currentNumber.length);
+          setDisplayValue(calculator.currentNumber);
+        }
       }
+      
     }
 
     $scope.clearPress = function(){
@@ -27,14 +30,26 @@ angular.module('pocketCalculatorApp')
     };
 
     $scope.pressValue = function(value){
-      calculator.currentNumber += value;
-      setDisplayValue(calculator.currentNumber);
+      if($scope.equal){
+        calculator = new CalculatorObject();
+        $scope.equal = false;
+        addValue(value);
+        setDisplayValue(calculator.currentNumber);
+      } else {
+        addValue(value);
+        setDisplayValue(calculator.currentNumber);
+      } 
     };
 
+    function addValue(number){
+      if(calculator.currentNumber.length < 10){
+        calculator.currentNumber += number;
+      }
+    }
     $scope.pressDot = function(dot){
       //point attribute is to keep track of current number making sure that you can only use one point
       //decimalPoint indicates to return a float rather than an integer
-      if(dot === '.' && calculator.point === false && calculator.currentNumber.length < 18){
+      if(dot === '.' && calculator.point === false && calculator.currentNumber.length < 10){
         calculator.point = true;
         calculator.decimalPoint = true;
         calculator.currentNumber += dot;
@@ -50,7 +65,6 @@ angular.module('pocketCalculatorApp')
     $scope.pressOperations = function(operation){
 
       //this can definitely be better, will need to refactor later
-
       if(calculator.operBool === false){
         //if there is no operation value, we need to set it and add prevNumber
         //which is the first number
@@ -77,11 +91,13 @@ angular.module('pocketCalculatorApp')
     };
 
     $scope.pressEqual = function(){
-      calculator.calculate(calculator.operation).then(function(data){
-        calculator.prevNumber = data;
-        $scope.equal = true;
-        setDisplayValue(data);
-      });
+      if(calculator.operation !== null && calculator.currentNumber.length > 0){
+        calculator.calculate(calculator.operation).then(function(data){
+          calculator.prevNumber = data;
+          $scope.equal = true;
+          setDisplayValue(data);
+        });
+      }
     };
 
     function setDisplayValue(value){
