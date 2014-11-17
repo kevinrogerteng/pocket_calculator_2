@@ -15,13 +15,19 @@ exports.minus = function(req, res){
   res.send(intValue.toString());
 }
 
-// exports.divide = function(req, res){
-//   console.log(req);
-//   res.send('hola');
-// }
+exports.divide = function(req, res){
+  var firstNumber = req.body.firstNumber,
+      secondNumber = req.body.secondNumber;
+  var intValue = firstNumber / secondNumber;
+  
+  res.send(intValue.toString());
+}
 
-// exports.multiply = function(req, res){
-//   console.log(req);
-//   res.send('hola');
-// }
+exports.multiply = function(req, res){
+  var firstNumber = req.body.firstNumber,
+      secondNumber = req.body.secondNumber;
+  var intValue = firstNumber * secondNumber;
+  
+  res.send(intValue.toString());
+}
 

@@ -6,19 +6,25 @@ angular.module('pocketCalculatorApp')
       this.currentNumber = '';
       this.operation = null;
       this.point = false;
+      this.decimalPoint = false;
       this.operBool = false;
     };
 
     CalculatorObject.prototype.calculate = function(operation){
       var self = this,
-          numberObject = {
-            'firstNumber': parseInt(this.prevNumber),
-            'secondNumber': parseInt(this.currentNumber)
-          };
+      numberObject = {
+        'firstNumber': parseFloat(this.prevNumber),
+        'secondNumber': parseFloat(this.currentNumber)
+      };
+
       return $http.post('/api/' + operation, numberObject).then(function(data){
         self.prevNumber = data.data;
         self.point = false;
-        return data.data;
+        if(self.decimalPoint){
+          return parseFloat(data.data);
+        } else {
+          return parseInt(data.data);
+        }
       })
     };
     return CalculatorObject;
