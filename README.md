@@ -15,12 +15,13 @@ Unfortunately, I was unable to implement unit and E2E testing. Hopefully, I woul
 4. Cd into server folder and run npm install
 5. While still on server folder, run npm test and open localhost:3000 on browser
 
- ##Particular Files To Look At##
- 1. /server/app.js
- 2. /server/api/calculator.js
- 3. /client/app/scripts/app.js
- 4. /client/app/scripts/controllers/calculator.js
- 5. /client/app/scripts/services/calculator_object.js
+##Particular Files To Look At##
+
+1. /server/app.js
+2. /server/api/calculator.js
+3. /client/app/scripts/app.js
+4. /client/app/scripts/controllers/calculator.js
+5. /client/app/scripts/services/calculator_object.js
 
 ##What's Next?##
 - Adding unit testing and end to end testing
