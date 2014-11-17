@@ -58,7 +58,7 @@ if (app.get('env') === 'production') {
 }
 
 app.post('/api/plus', api.plus);
-// app.post('/api/minus', api.minus);
+app.post('/api/minus', api.minus);
 // app.post('/api/divide', api.divide);
 // app.post('/api/multiply', api.multiply);
 // app.post('/api/equal', api.equal);

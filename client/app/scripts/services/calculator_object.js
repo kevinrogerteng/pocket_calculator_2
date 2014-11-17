@@ -3,9 +3,8 @@ angular.module('pocketCalculatorApp')
 
     var CalculatorObject = function(){
       this.prevNumber = '';
-      this.value = '';
+      this.currentNumber = '';
       this.operation = null;
-      this.prevBool = false;
       this.point = false;
       this.operBool = false;
     };
@@ -13,15 +12,14 @@ angular.module('pocketCalculatorApp')
     CalculatorObject.prototype.calculate = function(operation){
       var self = this,
           numberObject = {
-            'firstNumber': this.prevNumber,
-            'secondNumber': this.value
+            'firstNumber': parseInt(this.prevNumber),
+            'secondNumber': parseInt(this.currentNumber)
           };
-
       return $http.post('/api/' + operation, numberObject).then(function(data){
-        console.log(data);
-        // return data.data;
+        self.prevNumber = data.data;
+        self.point = false;
+        return data.data;
       })
-    }
-
+    };
     return CalculatorObject;
 });

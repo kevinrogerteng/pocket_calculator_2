@@ -6,71 +6,68 @@ angular.module('pocketCalculatorApp')
 
     var calculator = new CalculatorObject();
     $scope.current = false;
-    $scope.value = calculator.value;
-
-    $scope.sample = function(){
-      // $http.post('/api/plus', {'hello': 'cool'}).then(function(data){
-      //   console.log(data);
-      // });
-    };
+    $scope.equal = false;
+    $scope.displayValue = '';
 
     $scope.clearPress = function(){
       console.log('cleared everything');
     };
 
     $scope.pressValue = function(value){
-      if($scope.current === true){
-        calculator.value = value;
-        setDisplayValue(calculator.value);
-        $scope.current = false;
-      } else {
-        if(calculator.value.length < 18){
-          addValue(value);
-        }
-      }
+      calculator.currentNumber += value;
+      setDisplayValue(calculator.currentNumber);
     };
 
-    function addValue(number){
-      calculator.value += number;
-      setDisplayValue(calculator.value);
-    }
-
     $scope.pressDot = function(dot){
-      if(dot === '.' && calculator.point === false && calculator.value.length < 18){
+      if(dot === '.' && calculator.point === false && calculator.currentNumber.length < 18){
         calculator.point = true;
-        calculator.value += dot;
-        setDisplayValue(calculator.value);
+        calculator.currentNumber += dot;
+        setDisplayValue(calculator.currentNumber);
       }
     };
 
     $scope.pressOperations = function(operation){
 
-      if(calculator.prevBool === false && calculator.operBool === false){
-        calculator.prevBool = true;
+      if(calculator.operBool === false){
+        calculator.prevNumber = calculator.currentNumber
+        calculator.currentNumber = '';
         calculator.operBool = true;
-        calculator.prevNumber = calculator.value;
         calculator.operation = operation;
-        $scope.current = true;
+      } else if($scope.equal){
+        calculator.operation = operation;
+        calculator.currentNumber = '';
+        $scope.equal = false;
       } else {
-
-        // var intValue = parseInt(calculator.prevNumber) + parseInt(calculator.value);
-        // setDisplayValue(intValue.toString());
-
         calculator.calculate(calculator.operation).then(function(data){
-          console.log(data)
+          calculator.prevNumber = data;
+          calculator.currentNumber = '';
           setDisplayValue(data);
         });
-
-        // calculator.prevNumber = intValue;
       }
+      // if(calculator.operBool === false){
+      //   calculator.operBool = true;
+      //   calculator.prevNumber = calculator.currentNumber;
+      //   calculator.currentNumber = '';
+      //   calculator.operation = operation;
+      //   $scope.current = true;
+      // } else {
+      //   calculator.calculate(calculator.operation).then(function(data){
+      //     $scope.current = true;
+      //     setDisplayValue(data);
+      //   });
+      // }
     };
 
     $scope.pressEqual = function(){
-      // do somthing
+      calculator.calculate(calculator.operation).then(function(data){
+        calculator.prevNumber = data;
+        $scope.equal = true;
+        setDisplayValue(data);
+      });
     };
 
     function setDisplayValue(value){
-      $scope.value = value;
+      $scope.displayValue = value;
     }
     // todo
 });
