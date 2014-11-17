@@ -8,6 +8,18 @@ angular.module('pocketCalculatorApp')
     $scope.current = false;
     $scope.equal = false;
     $scope.displayValue = '';
+    $scope.sign = true;
+
+    $scope.toggleSign = function(){
+
+      if($scope.sign){
+        calculator.currentNumber = '-' + calculator.currentNumber;
+        setDisplayValue(calculator.currentNumber);
+      } else {
+        calculator.currentNumber = calculator.currentNumber.slice(1, calculator.currentNumber.length);
+        setDisplayValue(calculator.currentNumber);
+      }
+    }
 
     $scope.clearPress = function(){
       calculator = new CalculatorObject();
@@ -29,6 +41,11 @@ angular.module('pocketCalculatorApp')
         setDisplayValue(calculator.currentNumber);
       }
     };
+
+    $scope.pressPercentage = function(){
+      calculator.currentNumber = calculator.currentNumber / 100;
+      setDisplayValue(calculator.currentNumber);
+    }
 
     $scope.pressOperations = function(operation){
 
